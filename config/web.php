@@ -4,6 +4,7 @@ $params = require(__DIR__ . '/params.php');
 
 $config = [
     'id' => 'basic',
+    'language' => 'ru-RU',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
@@ -38,6 +39,8 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',],
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -48,6 +51,11 @@ $config = [
         */
     ],
     'params' => $params,
+    'modules' => [
+        'permit' => [
+            'class' => 'developeruz\db_rbac\Yii2DbRbac',
+        ],
+    ],
 ];
 
 if (YII_ENV_DEV) {
