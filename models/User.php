@@ -4,8 +4,9 @@ namespace app\models;
 
 use yii\base\NotSupportedException;
 use Yii;
+use developeruz\db_rbac\interfaces\UserRbacInterface;
 
-class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface, UserRbacInterface
 {
     public static function tableName() {
         
@@ -63,6 +64,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getId()
     {
         return $this->getPrimaryKey();
+    }
+    
+    public function getUserName() {
+        
+        return $this->username;;
     }
 
     /**

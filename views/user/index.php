@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
@@ -9,6 +10,9 @@ use yii\grid\GridView;
 
 $this->title = 'Пользователи';
 $this->params['breadcrumbs'][] = $this->title;
+
+$url = '';
+
 ?>
 <div class="user-index">
 
@@ -27,7 +31,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'login',
             'username',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' => '{view}&nbsp;&nbsp;{update}&nbsp;&nbsp;{permit}&nbsp;&nbsp;{delete}',
+            'buttons' =>
+                [
+                    'permit' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-wrench"></span>', Url::to(['/permit/user/view', 'id' => $model->id]), [
+                            'title' => Yii::t('yii', 'Change user role')
+                        ]); },
+                ]
+           ],
         ],
     ]); ?>
 </div>

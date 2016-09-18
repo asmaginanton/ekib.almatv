@@ -33,28 +33,37 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+    
+  
+    if (Yii::$app->user->can('admin')) {
+        $items[] = ['label' => 'Администрирование', 
+                'items' => [
+                ['label' => 'Пользователи', 'url' => ['/user']],
+                ['label' => 'Управление ролями', 'url' => ['/permit/access/role']],
+                ['label' => 'Управление правами доступа', 'url' => ['/permit/access/permission']],
+            ]];
+    }
+    
+    $items[] = ['label' => 'Обратная связь', 'url' => ['/site/contact']];
+    
+    Yii::$app->user->isGuest ? (
+        $items[] = ['label' => 'Вход', 'url' => ['/site/login']]
+        ) : (
+        $items[] = '<li>'
+            . Html::beginForm(['/site/logout'], 'post', ['class' => 'navbar-form'])
+            . Html::submitButton(
+            'Выход (' . Yii::$app->user->identity->username . ')',
+            ['class' => 'btn btn-link']
+            )
+            . Html::endForm()
+            . '</li>'
+    );
+    
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Администрирование', 
-                'items' => [
-                ['label' => 'Пользователи', 'url' => ['/user'],]
-            ],],
-            ['label' => 'Обратная связь', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Вход', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post', ['class' => 'navbar-form'])
-                . Html::submitButton(
-                    'Выход (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $items
     ]);
+    
     NavBar::end();
     ?>
 
