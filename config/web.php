@@ -1,5 +1,7 @@
 <?php
 
+use developeruz\db_rbac\behaviors\AccessBehavior;
+
 $params = require(__DIR__ . '/params.php');
 
 $config = [
@@ -56,6 +58,25 @@ $config = [
             'class' => 'developeruz\db_rbac\Yii2DbRbac',
             'params' => ['userClass' => 'app\models\User'],
         ],
+    ],
+    'as AccessBehavior' => [
+        'class' => AccessBehavior::className(),
+        'redirect_url' => '/',
+        'login_url' => ['site/login'],
+        'rules' =>
+            ['site' =>
+                [
+                    [
+                        'actions' => ['login', 'index', 'logout'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['about'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                ],
+            ]
     ],
 ];
 

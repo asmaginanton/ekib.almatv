@@ -8,6 +8,8 @@ use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters;
+use developeruz\db_rbac\behaviors\AccessBehavior;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -65,7 +67,6 @@ class UserController extends Controller
     {
         $model = new User();
 
-<<<<<<< HEAD
         if(Yii::$app->request->isPost){
         
             $model->load(Yii::$app->request->post());
@@ -84,15 +85,6 @@ class UserController extends Controller
                     'model' => $model,
                 ]);
             }
-=======
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
->>>>>>> b5b3115808a42483038267f8431c60f081807c94
     }
 
     /**
@@ -106,7 +98,7 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
