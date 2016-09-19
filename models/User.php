@@ -31,7 +31,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface, U
         
     }
     
-   
     /**
      * @inheritdoc
      */
@@ -104,5 +103,4 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface, U
         }
         
     }
-  
-}
+    
