@@ -66,4 +66,13 @@ return array (
       '@developeruz/db_rbac' => $vendorDir . '/developeruz/yii2-db-rbac',
     ),
   ),
+  'developeruz/yii2-custom-errorhandler' => 
+  array (
+    'name' => 'developeruz/yii2-custom-errorhandler',
+    'version' => '1.0.0.0',
+    'alias' => 
+    array (
+      '@developeruz/yii2_custom_errorhandler' => $vendorDir . '/developeruz/yii2-custom-errorhandler',
+    ),
+  ),
 );

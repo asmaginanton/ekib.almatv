@@ -18,7 +18,8 @@
         "yiisoft/yii2": ">=2.0.5",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "developeruz/yii2-db-rbac": "*"
+        "developeruz/yii2-db-rbac": "*",
+        "developeruz/yii2-custom-errorhandler": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

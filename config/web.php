@@ -61,13 +61,13 @@ $config = [
     ],
     'as AccessBehavior' => [
         'class' => AccessBehavior::className(),
-        'redirect_url' => '/',
+        'redirect_url' => '',
         'login_url' => ['site/login'],
         'rules' =>
             ['site' =>
                 [
                     [
-                        'actions' => ['login', 'index', 'logout'],
+                        'actions' => ['login', 'index', 'logout', 'error'],
                         'allow' => true,
                     ],
                     [

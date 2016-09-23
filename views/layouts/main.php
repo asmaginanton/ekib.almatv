@@ -44,7 +44,13 @@ AppAsset::register($this);
             ]];
     }
     
-    $items[] = ['label' => 'Обратная связь', 'url' => ['/site/contact']];
+    if(! Yii::$app->user->isGuest){
+        $items[] = ['label' => 'Справочники', 
+                        'items' => [
+                            ['label' => 'Агенты', 'url' => '/agent/index'],
+                            ['label' => 'Улицы', 'url' => '/street/index'],
+                        ]];
+    }
     
     Yii::$app->user->isGuest ? (
         $items[] = ['label' => 'Вход', 'url' => ['/site/login']]

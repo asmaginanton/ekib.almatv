@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\helpers\Url;
 
 class SiteController extends Controller
 {
@@ -44,7 +45,19 @@ class SiteController extends Controller
     {
         return [
             'error' => [
-                'class' => 'yii\web\ErrorAction',
+                'class' => 'developeruz\yii2_custom_errorhandler\ErrorHandler',
+                'array_of_exceptions' => [
+                    403 => function()
+                    {
+                        return $this->redirect(Url::to('/site/login'));
+                    }, 
+                    500 => function()
+                    {
+                        //send notification to administrator 
+                        // ...
+                        return $this->redirect(Url::to('/site/index'));
+                    }, 
+                ]
             ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
@@ -118,8 +131,4 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
 }

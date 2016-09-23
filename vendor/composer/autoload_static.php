@@ -25,6 +25,7 @@ class ComposerStaticInite7bbc9e18f4d13c4675486b0c8f56260
         ),
         'd' => 
         array (
+            'developeruz\\yii2_custom_errorhandler\\' => 37,
             'developeruz\\db_rbac\\' => 20,
         ),
         'c' => 
@@ -69,6 +70,10 @@ class ComposerStaticInite7bbc9e18f4d13c4675486b0c8f56260
         'yii\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2',
+        ),
+        'developeruz\\yii2_custom_errorhandler\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/developeruz/yii2-custom-errorhandler',
         ),
         'developeruz\\db_rbac\\' => 
         array (

@@ -970,5 +970,50 @@
             "rbac",
             "yii"
         ]
+    },
+    {
+        "name": "developeruz/yii2-custom-errorhandler",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/developeruz/yii2-custom-errorhandler.git",
+            "reference": "6f6265c12bbfc01c705076251aec8b374786a1c9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/developeruz/yii2-custom-errorhandler/zipball/6f6265c12bbfc01c705076251aec8b374786a1c9",
+            "reference": "6f6265c12bbfc01c705076251aec8b374786a1c9",
+            "shasum": ""
+        },
+        "require": {
+            "yiisoft/yii2": "*"
+        },
+        "time": "2015-09-24 07:36:42",
+        "type": "yii2-extension",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "developeruz\\yii2_custom_errorhandler\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Elvira Sheina",
+                "email": "elleuz@gmail.com",
+                "homepage": "http://developer.uz"
+            }
+        ],
+        "description": "Custom error handler for Yii 2.x application",
+        "keywords": [
+            "error handler",
+            "security",
+            "yii",
+            "yii2"
+        ]
     }
 ]
