@@ -44,21 +44,9 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'developeruz\yii2_custom_errorhandler\ErrorHandler',
-                'array_of_exceptions' => [
-                    403 => function()
-                    {
-                        return $this->redirect(Url::to('/site/login'));
-                    }, 
-                    500 => function()
-                    {
-                        //send notification to administrator 
-                        // ...
-                        return $this->redirect(Url::to('/site/index'));
-                    }, 
-                ]
-            ],
+//            'error' => [
+//                'class' => 'yii\web\ErrorAction',
+//            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
@@ -126,9 +114,11 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
+    public function actionError()
+    {
+        $exception = Yii::$app->errorHandler->exception;
+        if ($exception !== null) {
+            return $this->render('error', ['exception' => $exception]);
+        }
+    }
 }
