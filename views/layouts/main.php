@@ -48,6 +48,8 @@ AppAsset::register($this);
         $items[] = ['label' => 'Справочники', 
                         'items' => [
                             ['label' => 'Агенты', 'url' => '/agent/index'],
+                            ['label' => 'Дома', 'url' => '/home/index'],
+                            ['label' => 'Районы', 'url' => '/district/index'],
                             ['label' => 'Улицы', 'url' => '/street/index'],
                         ]];
     }
