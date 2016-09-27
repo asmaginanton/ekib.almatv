@@ -19,7 +19,7 @@ use yii\helpers\Html;
 
 <?php ActiveForm::end() ?>
 
+<div style="display: inline-block">
 <?php var_dump($model->csvFile) ?>
-</br>
-<?php var_dump($model->data) ?>
-
+<?php var_dump($model->arrayData) ?>
+</div>
