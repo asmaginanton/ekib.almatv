@@ -44,6 +44,13 @@ AppAsset::register($this);
             ]];
     }
     
+    if (Yii::$app->user->can('admin')){
+        $items[] = ['label' => 'Импорт данных',
+                'items' => [
+                    ['label' => 'Расширенный отчет по абонентам', 'url' => ['/import/extend-abonents-report']],
+            ]];
+    }
+    
     if(! Yii::$app->user->isGuest){
         $items[] = ['label' => 'Справочники', 
                         'items' => [
