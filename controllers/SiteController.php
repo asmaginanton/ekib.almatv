@@ -121,4 +121,8 @@ class SiteController extends Controller
             return $this->render('error', ['exception' => $exception]);
         }
     }
+    
+    public function actionPhpinfo(){
+        echo phpinfo();
+    }
 }
