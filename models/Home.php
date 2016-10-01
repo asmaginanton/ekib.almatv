@@ -99,18 +99,19 @@ class Home extends \yii\db\ActiveRecord
     public static function getIdByFullname($fullname)
     {
         $pattern = '/^(?<street>\D+\s?\D+)\s(?<home>\d*)[\/]?(?<korpus>\w?)/';
-        preg_match($pattern, $fullname, $matches);
-        $street = $matches['street'];
-        $number = $matches['home'];
-        $korpus = $matches['korpus'];
+        $home_id = NULL;
         
-        $street_id = Street::find()->where(['name' => $street])->one()->id;
-        $home = Home::find()->where(['street_id' => $street_id])->one();
-        
-        if($home){
-            return $home->id;
+        if(preg_match($pattern, $fullname, $matches))
+        {
+            $street = $matches['street'];
+            $number = $matches['home'];
+            $korpus = $matches['korpus'];
+            
+            $street_id = Street::find()->where(['name' => $street])->one()->id;
+            $home = Home::find()->where(['street_id' => $street_id, 'number' => $number, 'korpus' => $korpus])->one();
+            if($home) $home_id=$home->id;
         }
-        return FALSE;
+        return $home_id;
     }
 
         public function getCountFloors()

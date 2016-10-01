@@ -51,6 +51,18 @@ class Address extends \yii\db\ActiveRecord
         if(!$home_id){
             return NULL;
         }
-        $address = Address::find(['']);
+
+        
+        $address = Address::find()->where(['home_id' => $home_id, 'apartment' => $apartment])->one();
+        if(!$address){
+            $address = new Address();
+            $address->home_id = $home_id;
+            $address->apartment = $apartment;
+            if($address->validate()) {
+                $address->save();
+                Comment::WriteComment('address', $address->id, 'Внесен в базу данных');
+            }
+        }
+        return $address->id;
     }
 }

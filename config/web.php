@@ -71,6 +71,7 @@ $config = [
                         'allow' => true,
                     ],
                     [
+                        'actions' => ['contact', 'phpinfo'],
                         'actions' => ['about', 'contact'],
                         'allow' => true,
                         'roles' => ['admin'],
