@@ -22,15 +22,12 @@ use yii\helpers\Html;
 </div>
 
 
-<?php if($model->importResult): ?>
-    
-<div class="alert <?= ($model->importResult['status']=='Успешный') ? 'alert-success' : 'alert-danger'; ?>">
-    <?= Html::label('Результат импорта: '.$model->importResult['status']); ?>
-    <?=        yii\helpers\VarDumper::dump($model->importResult, 10, TRUE); ?>
+<div class="alert <?= ($model->getImportStatus()=='успешный') ? 'alert-success' : 'alert-danger'; ?>">
+    <?= Html::label('Результат импорта: '.$model->getImportStatus()); ?>
+    <?=        yii\helpers\VarDumper::dump($model->getResult(), 10, TRUE); ?>
 </div>
-<?php endif; ?>
 
 
-<div style="display: inline">
-<?php yii\helpers\VarDumper::dump($model->arrayData, 10, TRUE) ?>
-</div>
+<!--<div style="display: inline">
+<?php //yii\helpers\VarDumper::dump($model->arrayData, 10, TRUE) ?>
+</div>-->

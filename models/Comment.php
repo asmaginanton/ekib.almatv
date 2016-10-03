@@ -61,7 +61,7 @@ class Comment extends \yii\db\ActiveRecord
         $comment->comment = $message;
         $comment->author = Yii::$app->user->identity->username;
         $date = new \DateTime();
-        $comment->date = $date->format('d-m-Y H:i');
+        $comment->date = $date->format('Y-m-d H:i');
         $comment->save();
     }
 }

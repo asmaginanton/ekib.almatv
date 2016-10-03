@@ -109,7 +109,9 @@ class Home extends \yii\db\ActiveRecord
             
             $street_id = Street::find()->where(['name' => $street])->one()->id;
             $home = Home::find()->where(['street_id' => $street_id, 'number' => $number, 'korpus' => $korpus])->one();
-            if($home) $home_id=$home->id;
+            if($home) {
+                $home_id=$home->id;
+            }
         }
         return $home_id;
     }

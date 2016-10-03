@@ -10,8 +10,7 @@ use Yii;
  * @property integer $id
  * @property string $fullname
  * @property string $mobile
- * @property integer $address_id
- * @property integer $contract_id
+ * @property string $phone
  */
 class Abonent extends \yii\db\ActiveRecord
 {
@@ -29,10 +28,8 @@ class Abonent extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fullname', 'address_id', 'contract_id'], 'required'],
-            [['address_id', 'contract_id'], 'integer'],
-            [['fullname'], 'string', 'max' => 255],
-            [['mobile'], 'string', 'max' => 12],
+            [['fullname'], 'required'],
+            [['fullname', 'mobile', 'phone'], 'string', 'max' => 255],
         ];
     }
 
@@ -45,8 +42,7 @@ class Abonent extends \yii\db\ActiveRecord
             'id' => 'ID',
             'fullname' => 'Fullname',
             'mobile' => 'Mobile',
-            'address_id' => 'Address ID',
-            'contract_id' => 'Contract ID',
+            'phone' => 'Телефон',
         ];
     }
     

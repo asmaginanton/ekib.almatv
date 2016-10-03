@@ -17,16 +17,13 @@ use yii\web\UploadedFile;
  *
  * @author anton.smagin
  */
-class ExtendAbonentsReport extends Model{
+class ExtendAbonentsReport extends ImportReports{
     
     public $csvFile;
     public $arrayData;
     
-    public $importResult;
-    
-
     const ENCODING_REQUERE = true; // требуется ли перекодировка файла
-
+    
     public function rules() {
         return [
             ['csvFile', 'file', 'skipOnEmpty' => FALSE],
@@ -46,10 +43,6 @@ class ExtendAbonentsReport extends Model{
     
     private function processing()
     {
-        $this->importResult['successes'] = [];
-        $this->importResult['errors'] = [];
-        $this->importResult['counter'] = 0;
-
         // загрузка данных
         $this->arrayData = Utilites::csv_to_array($this->csvFile->tempName, self::ENCODING_REQUERE);
         
@@ -60,29 +53,80 @@ class ExtendAbonentsReport extends Model{
             $contract = Contract::find()->where(['number' => $record->contract_number])->one();
 
             if($contract !== NULL){
-                $contract->checkState();
+                $this->checkContractState($contract, $record);
             } else {
-                $contract = new Contract();
-                $contract->number = $record->contract_number;
-                $contract->category = $record->contract_category;
-                $contract->type = $record->contract_type;
-                $contract->status = $record->contract_status;
-                $contract->balance = $record->contract_balance;
-                $contract->address_id = Address::getId($record->address_home, $record->address_apartment);
-                if(!$contract->address_id)
-                    array_push($this->importResult['errors'], [$contract->number => 'Невозможно получить ID дома '.$record->address_home]);
-                
-                if ($contract->validate()){
-                    $contract->save();
-                    array_push($this->importResult['successes'], 'Добавлен контракт № '.$contract->number) ;
+                if ($this->addContract($record)){
+                    // если контракт добавлен успешно
+                    $this->addResult(self::IMPORT_SUCCESS, $record->contract_number, 'Добавлен в базу');
                 } else {
-                    array_push($this->importResult['errors'], [$contract->number => $contract->getErrors()]);
-                }   
+                    // если контракт не добавлен
+                    $this->addResult(self::IMPORT_ERROR, $record->contract_number, 'Контракт не добавлен в базу');
+                }
             }
-            $this->importResult['counter']++;
+            $this->addCounter();
         }
-        ($this->importResult['errors'] == NULL) ? $this->importResult['status'] = 'успешный' : $this->importResult['status'] = 'есть ошибки!';
     }
+    
+    private function addContract(EARrecord $record){
+        
+        $contract = new Contract();
+        // Информация о состоянии контракта
+        $contract->number = $record->contract_number;
+        $contract->category = $record->contract_category;
+        $contract->type = $record->contract_type;
+        $contract->status = $record->contract_status;
+        $contract->balance = $record->contract_balance;
+        
+        // получаем id дома
+        $home_id = Home::getIdByFullname($record->address_home);
+        if(!$home_id){
+            $this->addResult(self::IMPORT_ERROR, $contract->number, 'Невозможно получить ID дома '.$record->address_home);
+            return FALSE;
+        }
+        // получаем id адреса
+        $address = Address::find()->where(['home_id' => $home_id, 'apartment' => $record->address_apartment])->one();
+        if(!$address){
+            $address = new Address();
+            $address->home_id = $home_id;
+            $address->apartment = $record->address_apartment;
+            if($address->validate()) {
+                $address->save();
+                Comment::WriteComment('address', $address->id, 'Добавлен в базу');
+            }
+        }
+        
+        // получаем id абонента
+        $abonent = Abonent::find()->where(['fullname' => $record->abonent_fullname])->one();
+        if(!$abonent){
+            $abonent = new Abonent();
+            $abonent->fullname = $record->abonent_fullname;
+            $abonent->mobile = $record->abonent_mobile;
+            $abonent->phone = $record->abonent_phone;
+            if($abonent->validate()) {
+                $abonent->save();
+                Comment::WriteComment('abonent', $abonent->id, 'Добавлен в базу');
+            } else {
+                $this->addResults(self::IMPORT_ERROR, $contract->number, $abonent->getErrors());
+            }
+        }
+        
+        $contract->abonent_id = $abonent->id;
+        
+        
+        // Сохранение
+        if($contract->validate()){
+            $contract->save();
+            Comment::WriteComment('contract', $contract->id, 'Добавлен в базу');
+            return TRUE;
+        } else {
+            $this->addResults(self::IMPORT_ERROR, $contract->number, $contract->getErrors());
+        }
+    }
+    
+    private function checkContractState(Contract $contract, EARrecord $record){
+        
+    }
+    
 }
 
 class EARrecord{
