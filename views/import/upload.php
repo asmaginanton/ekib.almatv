@@ -21,12 +21,31 @@ use yii\helpers\Html;
 <?php ActiveForm::end() ?>
 </div>
 
+<?php if($model->isResult()): ?>
 
-<div class="alert <?= ($model->getImportStatus()=='успешный') ? 'alert-success' : 'alert-danger'; ?>">
-    <?= Html::label('Результат импорта: '.$model->getImportStatus()); ?>
+<div class="alert <?= 'alert-'.$model->getImportStatus(); ?>">
+    <?= Html::label('Обработано: '.$model->isResult().' строк. '.'Результат: '.$model->getImportStatus()); ?>
+</div>    
+
+<?php
+$successes = $model->getSuccesses();
+
+?>
+
+    <?php if($model->getWarnings()): ?>
+    <?php foreach ()
+
+    <?php    endif; ?>
+
+<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#dump">
+  Dump Results
+</button>
+
+<div id="dump" class="collapse in">
     <?=        yii\helpers\VarDumper::dump($model->getResult(), 10, TRUE); ?>
 </div>
 
+<?php endif; ?>
 
 <!--<div style="display: inline">
 <?php //yii\helpers\VarDumper::dump($model->arrayData, 10, TRUE) ?>

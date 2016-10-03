@@ -16,9 +16,9 @@ use yii\base\Model;
  */
 class ImportReports extends Model{
     
-    const IMPORT_SUCCESS = 'успешный';
-    const IMPORT_ERROR = 'есть ошибки';
-    const IMPORT_FATAL_ERROR = 'ошибка!';
+    const IMPORT_SUCCESS = 'success';
+    const IMPORT_ERROR = 'warning';
+    const IMPORT_FATAL_ERROR = 'danger';
     
     private $importResult;
     
@@ -27,9 +27,9 @@ class ImportReports extends Model{
         $this->importResult = [];
         $this->importResult['status'] = self::IMPORT_ERROR;
         $this->importResult['counter'] = 0;
-        $this->importResult['successes'] = [];
-        $this->importResult['warnings'] = [];
-        $this->importResult['errors'] = [];
+        $this->importResult[self::IMPORT_SUCCESS] = [];
+        $this->importResult[self::IMPORT_ERROR] = [];
+        $this->importResult[self::IMPORT_FATAL_ERROR] = [];
         
         parent::init();
         
@@ -41,11 +41,11 @@ class ImportReports extends Model{
         }
         
         if($type == self::IMPORT_SUCCESS){
-            array_push ($this->importResult['successes'], [$key => $message]);}
+            array_push ($this->importResult[self::IMPORT_SUCCESS], [$key => $message]);}
         if($type == self::IMPORT_ERROR){
-            array_push ($this->importResult['warnings'], [$key => $message]);}
+            array_push ($this->importResult[self::IMPORT_ERROR], [$key => $message]);}
         if($type == self::IMPORT_FATAL_ERROR){
-            array_push ($this->importResult['errors'], [$key => $message]);}
+            array_push ($this->importResult[self::IMPORT_FATAL_ERROR], [$key => $message]);}
     }
     
     public function addResults($type, $key,array $messages){
@@ -67,12 +67,25 @@ class ImportReports extends Model{
         return $this->importResult;
     }
     
+    public function getSuccesses(){
+        
+        return $this->importResult[self::IMPORT_SUCCESS];
+    }
+    
+    public function getWarnings(){
+        return $this->importResult[self::IMPORT_ERROR];
+    }
+    
+    public function getErrors(){
+        return $this->importResult[self::IMPORT_FATAL_ERROR];
+    }
+
     public function getImportStatus(){
         
-        if($this->importResult['errors'] != []){
+        if($this->importResult[self::IMPORT_FATAL_ERROR] != []){
             $this->importResult['status'] = self::IMPORT_FATAL_ERROR;
             }
-        elseif ($this->importResult['warnings'] != []) {
+        elseif ($this->importResult[self::IMPORT_ERROR] != []) {
             $this->importResult['status'] = self::IMPORT_ERROR;
             }
         else {
@@ -80,5 +93,14 @@ class ImportReports extends Model{
         }
         
         return $this->importResult['status'];
+    }
+    
+    public function isResult(){
+        
+        if($this->importResult['counter'] > 0) { 
+            return $this->importResult['counter'];
+        } else { 
+            return FALSE;
+        }
     }
 }

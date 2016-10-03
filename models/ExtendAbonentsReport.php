@@ -95,6 +95,8 @@ class ExtendAbonentsReport extends ImportReports{
             }
         }
         
+        $contract->address_id = $address->id;
+        
         // получаем id абонента
         $abonent = Abonent::find()->where(['fullname' => $record->abonent_fullname])->one();
         if(!$abonent){
