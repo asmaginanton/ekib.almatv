@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "607d6949ea8c8100a09ad4288c2a0bd2",
-    "content-hash": "eae0ff08b54678073573be59fc22cf79",
+    "hash": "c2046e5bc812943b067787a5f11d64db",
+    "content-hash": "324e75e5b2606650aaa476a83da79e8f",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -256,49 +256,6 @@
             "time": "2015-03-06 05:28:07"
         },
         {
-            "name": "developeruz/yii2-custom-errorhandler",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/developeruz/yii2-custom-errorhandler.git",
-                "reference": "6f6265c12bbfc01c705076251aec8b374786a1c9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/developeruz/yii2-custom-errorhandler/zipball/6f6265c12bbfc01c705076251aec8b374786a1c9",
-                "reference": "6f6265c12bbfc01c705076251aec8b374786a1c9",
-                "shasum": ""
-            },
-            "require": {
-                "yiisoft/yii2": "*"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "developeruz\\yii2_custom_errorhandler\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Elvira Sheina",
-                    "email": "elleuz@gmail.com",
-                    "homepage": "http://developer.uz"
-                }
-            ],
-            "description": "Custom error handler for Yii 2.x application",
-            "keywords": [
-                "error handler",
-                "security",
-                "yii",
-                "yii2"
-            ],
-            "time": "2015-09-24 07:36:42"
-        },
-        {
             "name": "developeruz/yii2-db-rbac",
             "version": "1.0.11",
             "source": {
@@ -382,6 +339,59 @@
                 "html"
             ],
             "time": "2015-08-05 01:03:42"
+        },
+        {
+            "name": "kartik-v/bootstrap-fileinput",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/bootstrap-fileinput.git",
+                "reference": "d3f57f60ec1ddaf2e4fdc738255a20f3d083f018"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/d3f57f60ec1ddaf2e4fdc738255a20f3d083f018",
+                "reference": "d3f57f60ec1ddaf2e4fdc738255a20f3d083f018",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\plugins\\fileinput\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "An enhanced HTML 5 file input for Bootstrap 3.x with features for file preview for many file types, multiple selection, ajax uploads, and more.",
+            "homepage": "https://github.com/kartik-v/bootstrap-fileinput",
+            "keywords": [
+                "ajax",
+                "bootstrap",
+                "delete",
+                "file",
+                "image",
+                "input",
+                "jquery",
+                "multiple",
+                "preview",
+                "progress",
+                "upload"
+            ],
+            "time": "2016-09-24 18:15:28"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -707,6 +717,49 @@
             }
         },
         {
+            "name": "developeruz/yii2-custom-errorhandler",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/developeruz/yii2-custom-errorhandler.git",
+                "reference": "6f6265c12bbfc01c705076251aec8b374786a1c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/developeruz/yii2-custom-errorhandler/zipball/6f6265c12bbfc01c705076251aec8b374786a1c9",
+                "reference": "6f6265c12bbfc01c705076251aec8b374786a1c9",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "developeruz\\yii2_custom_errorhandler\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Elvira Sheina",
+                    "email": "elleuz@gmail.com",
+                    "homepage": "http://developer.uz"
+                }
+            ],
+            "description": "Custom error handler for Yii 2.x application",
+            "keywords": [
+                "error handler",
+                "security",
+                "yii",
+                "yii2"
+            ],
+            "time": "2015-09-24 07:36:42"
+        },
+        {
             "name": "fzaninotto/faker",
             "version": "v1.6.0",
             "source": {
@@ -987,7 +1040,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "kartik-v/bootstrap-fileinput": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

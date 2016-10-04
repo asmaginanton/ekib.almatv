@@ -19,6 +19,8 @@ use yii\web\UploadedFile;
  */
 class ExtendAbonentsReport extends ImportReports{
     
+    public $title = "Импорт расширенного отчета по абонентам";
+    
     public $csvFile;
     public $arrayData;
     

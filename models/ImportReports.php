@@ -41,11 +41,11 @@ class ImportReports extends Model{
         }
         
         if($type == self::IMPORT_SUCCESS){
-            array_push ($this->importResult[self::IMPORT_SUCCESS], [$key => $message]);}
+            $this->importResult[self::IMPORT_SUCCESS][] = [$key => $message];}
         if($type == self::IMPORT_ERROR){
-            array_push ($this->importResult[self::IMPORT_ERROR], [$key => $message]);}
+            $this->importResult[self::IMPORT_ERROR][] = [$key => $message];}
         if($type == self::IMPORT_FATAL_ERROR){
-            array_push ($this->importResult[self::IMPORT_FATAL_ERROR], [$key => $message]);}
+            $this->importResult[self::IMPORT_FATAL_ERROR][] = [$key => $message];}
     }
     
     public function addResults($type, $key,array $messages){

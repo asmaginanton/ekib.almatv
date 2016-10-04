@@ -122,7 +122,12 @@ class SiteController extends Controller
         }
     }
     
-    public function actionPhpinfo(){
-        echo phpinfo();
+    public function actionTest(){
+        
+        $arr['my'] = [];
+        $arr['my']['1'] = ['первый'];
+        $arr['my']['2'] = ['второй'];
+        $arr['my']['1'] = ['третий'];
+        var_dump($arr);
     }
 }

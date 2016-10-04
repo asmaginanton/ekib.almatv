@@ -23,6 +23,10 @@ class ComposerStaticInite7bbc9e18f4d13c4675486b0c8f56260
             'yii\\bootstrap\\' => 14,
             'yii\\' => 4,
         ),
+        'k' => 
+        array (
+            'kartik\\plugins\\fileinput\\' => 25,
+        ),
         'd' => 
         array (
             'developeruz\\yii2_custom_errorhandler\\' => 37,
@@ -70,6 +74,10 @@ class ComposerStaticInite7bbc9e18f4d13c4675486b0c8f56260
         'yii\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2',
+        ),
+        'kartik\\plugins\\fileinput\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/bootstrap-fileinput',
         ),
         'developeruz\\yii2_custom_errorhandler\\' => 
         array (
