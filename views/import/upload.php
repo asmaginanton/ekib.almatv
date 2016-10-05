@@ -2,6 +2,7 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\models\ImportReport;
+use kartik\file\FileInput;
 
 if($model->title){
     $this->title = $model->title;
@@ -16,7 +17,12 @@ if($model->title){
         ); 
 ?>
 
-<?= $form->field($model, 'csvFile')->fileInput(['class' => 'file', 'type' => 'file']); ?>
+<?= $form->field($model, 'csvFile')->widget(FileInput::className(),[
+        'model' => $model,
+        'attribute' => 'csvFile',
+        
+        'pluginOptions' => ['showPreview' => FALSE, 
+            'uploadUrl' => Yii::$app->basePath."/uploads/",]]); ?>
 
 <div class="form-group">
     <div>

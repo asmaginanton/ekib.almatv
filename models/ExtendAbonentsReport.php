@@ -28,7 +28,7 @@ class ExtendAbonentsReport extends ImportReports{
     
     public function rules() {
         return [
-            ['csvFile', 'file', 'skipOnEmpty' => FALSE],
+            [['csvFile'], 'file', 'skipOnEmpty' => FALSE],
         ];
     }
     
