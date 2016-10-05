@@ -71,11 +71,25 @@ $config = [
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['about', 'contact', 'test'],
+                        'actions' => [],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
                 ],
+                'test' =>
+                [
+                    [
+                        'actions' => [],
+                        'allow' => TRUE,
+                        'roles' => ['admin'],
+                    ]
+                ],
+                'debug/default' => [
+                    [
+                        'actions' => [],
+                        'allow' => TRUE,
+                    ]
+                ]
             ]
     ],
 ];
