@@ -10,28 +10,31 @@ if($model->title){
 
 ?>
 
-<div class="upload-form">
-<?php $form = ActiveForm::begin(
-        ['id' => 'upload-form'],
-        ['options' => ['enctype' => 'multipart/form-data']]
-        ); 
-?>
+<?php 
+$form = ActiveForm::begin(
+        ['options' => ['enctype' => 'multipart/form-data']
+]); 
 
-<?= $form->field($model, 'csvFile')->widget(FileInput::className(),[
+echo $form->field($model, 'csvFile')->widget(FileInput::className(),[
         'model' => $model,
         'attribute' => 'csvFile',
         
-        'pluginOptions' => ['showPreview' => FALSE, 
-            'uploadUrl' => Yii::$app->basePath."/uploads/",]]); ?>
+        'pluginOptions' => [
+            'showPreview' => FALSE, 
+            'showRemove' => FALSE,
+            'initialCaption' => 'Выбирете файл для загрузки',
+            'allowedFileTypes' => ['text'],
+            'msgInvalidFileType' => 'Не верный тип файла "{name}". Для загрузки необходим файл типа "{types}".',
+            'allowedFileExtensions' => ['csv'],
+            ]])->label($this->title); ?>
 
-<div class="form-group">
+<!--<div class="form-group">
     <div>
         <?= Html::submitButton('Загрузить', ['class' => 'btn btn-primary', 'name' => 'upload-button']) ?>
     </div>
-</div>
+</div>-->
 
 <?php ActiveForm::end() ?>
-</div>
 
 <?php if($model->isResult()): ?>
 

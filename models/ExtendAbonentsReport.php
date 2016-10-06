@@ -35,8 +35,11 @@ class ExtendAbonentsReport extends ImportReports{
     public function upload(){
         if($this->validate()){
             // сохранение
-            $this->processing();
-            
+            try{
+                $this->processing();
+            } catch (Exception $ex) {
+                
+            }
             return TRUE;
         } else {
             return FALSE;
