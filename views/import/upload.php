@@ -8,7 +8,9 @@ if($model->title){
     $this->title = $model->title;
 }
 
-?>
+$this->params['breadcrumbs'][] = $this->title;?>
+
+<h1><?= Html::encode($this->title) ?></h1>
 
 <?php 
 $form = ActiveForm::begin(
@@ -26,7 +28,7 @@ echo $form->field($model, 'csvFile')->widget(FileInput::className(),[
             'allowedFileTypes' => ['text'],
             'msgInvalidFileType' => 'Не верный тип файла "{name}". Для загрузки необходим файл типа "{types}".',
             'allowedFileExtensions' => ['csv'],
-            ]])->label($this->title); ?>
+            ]])->label(FALSE); ?>
 
 <!--<div class="form-group">
     <div>
