@@ -9,6 +9,8 @@
 namespace app\controllers;
 
 use yii\web;
+use yii\base;
+use yii\db;
 use yii\web\UploadedFile;
 use app\models;
 
@@ -36,6 +38,14 @@ class TestController extends web\Controller{
                 
         }
         return $this->render('upload',['model' => $model]);
+    }
+    
+    public function actionIndex(){
+        
+        $model = new models\ExtendAbonentsReport;
+        $backup = new models\DatabaseBackup();
+        $backup->Backup($model, 'agent');
+        
     }
     
 }
