@@ -44,7 +44,7 @@ class TestController extends web\Controller{
         
         $model = new models\ExtendAbonentsReport;
         $backup = new models\DatabaseBackup();
-        $backup->Backup($model, 'agent');
+        $backup->Backup($model, 'agent, home, address');
         
     }
     

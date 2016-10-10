@@ -10,6 +10,7 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\web\UploadedFile;
+use app\models;
 
 
 /**
@@ -36,6 +37,10 @@ class ExtendAbonentsReport extends ImportReports{
         if($this->validate()){
             // сохранение
             try{
+                // создаем бэкап таблиц
+                $backup = new DatabaseBackup();
+                $backup->Backup($this, 'agent, home, address');
+                
                 $this->processing();
             } catch (Exception $ex) {
                 

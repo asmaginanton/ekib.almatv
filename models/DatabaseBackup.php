@@ -25,15 +25,7 @@ class DatabaseBackup {
 
     public function Backup($sender, $tables = NULL){
         
-        // Получаем имя модели вызвавшей функцию
-        $class = new \ReflectionClass($sender);
-        $model_name = $class->getShortName();
-        // Формируем путь для сохранения бэкапа
-        $this->backup_path =    \Yii::$app->basePath . 
-                                \Yii::$app->params['backupPath'] .
-                                $model_name . '\\';
-        // Формируем имя файла
-        $this->file_name = $this->backup_path . 'backup_' . date( 'Y.m.d_H.i.s' ) . '.sql';
+        
                 
         if($tables === NULL){
             $tables = $this->getTables();
@@ -43,6 +35,10 @@ class DatabaseBackup {
         
         if(!is_array($tables)){
             throw new Exception ("Wrong input data");}
+        
+        if (!$this->fileOpen($sender)){
+            throw new base\ErrorException("Error open file " . $this->file_name);
+        }
             
         if (! $this->StartBackup ()) {
             throw new Exception("Error start backup");
@@ -58,6 +54,29 @@ class DatabaseBackup {
         $this->EndBackup ();    
     }
     
+    private function fileOpen($sender){
+        
+        // Получаем имя модели вызвавшей функцию
+        $class = new \ReflectionClass($sender);
+        $model_name = $class->getShortName();
+        // Формируем путь для сохранения бэкапа
+        $this->backup_path =    \Yii::$app->basePath . 
+                                \Yii::$app->params['backupPath'] .
+                                $model_name . '\\';
+        if(!file_exists($this->backup_path)){
+            mkdir($this->backup_path, 0777, TRUE);
+        }
+        // Формируем имя файла
+        $this->file_name = $this->backup_path . 'backup_' . date( 'Y.m.d_H.i.s' ) . '.sql';
+        
+        try{
+            $this->file = fopen ( $this->file_name, 'w+' );
+            return TRUE;
+        } catch (Exception $ex) {
+                    return FALSE;
+        }
+    }
+
     private function getTables() {
             $sql = 'SHOW TABLES';
             $cmd = Yii::$app->db->createCommand ( $sql );
@@ -66,7 +85,7 @@ class DatabaseBackup {
     }
     
     private function StartBackup($addcheck = true) {
-            $this->file = fopen ( $this->file_name, 'w+' );
+            
 
             if ($this->file == null)
                     return false;
