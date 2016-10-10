@@ -28,3 +28,7 @@ phpunit.phar
 
 #Apache loge files
 /logs
+
+/uploads
+/backup
+/config/db.php
