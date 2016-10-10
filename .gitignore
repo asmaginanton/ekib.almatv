@@ -31,4 +31,3 @@ phpunit.phar
 
 /uploads
 /backup
-/config/db.php
