@@ -8,6 +8,8 @@
 
 namespace app\models;
 
+use Yii;
+use yii\base;
 use yii\base\Model;
 
 /**
@@ -101,6 +103,30 @@ class ImportReports extends Model{
             return $this->importResult['counter'];
         } else { 
             return FALSE;
+        }
+    }
+    
+    public function getShortClassName(){
+        $str = get_class($this);
+        $class_name = end(explode("\\", $str));
+        return $class_name;
+    }
+
+    public function writeResultToDb($report_name){
+        
+        $record = new ImportResult();
+        $record->type = $report_name;
+        $record->date = date('Y-m-d H:i');
+        $record->status = $this->getImportStatus();
+        $record->executor = Yii::$app->user->identity->username;
+        $record->descr = "Success (" . count($this->getSuccesses()) . 
+                "), Warning (". count($this->getWarnings())
+                ."), Error (". count($this->getErrors())
+                .").";
+        if($record->validate()){
+            $record->save();
+        } else {
+            throw new \ErrorException(implode("=>", $record->getFirstErrors()));
         }
     }
 }

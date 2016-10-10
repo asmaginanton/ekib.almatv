@@ -36,15 +36,15 @@ class ExtendAbonentsReport extends ImportReports{
     public function upload(){
         if($this->validate()){
             // сохранение
-            try{
-                // создаем бэкап таблиц
-                $backup = new DatabaseBackup();
-                $backup->Backup($this, 'agent, home, address');
-                
-                $this->processing();
-            } catch (Exception $ex) {
-                
-            }
+            
+            // создаем бэкап таблиц
+            $backup = new DatabaseBackup();
+            $backup->Backup($this, 'abonent, home, address');
+
+            $this->processing();
+
+            // пишем результат в БД
+            $this->writeResultToDb($this->getShortClassName());
             return TRUE;
         } else {
             return FALSE;

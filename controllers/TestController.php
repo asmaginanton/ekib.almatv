@@ -42,9 +42,8 @@ class TestController extends web\Controller{
     
     public function actionIndex(){
         
-        $model = new models\ExtendAbonentsReport;
         $backup = new models\DatabaseBackup();
-        $backup->Backup($model, 'agent, home, address');
+        $backup->Backup($this);
         
     }
     

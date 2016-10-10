@@ -9,8 +9,24 @@ if($model->title){
 }
 
 $this->params['breadcrumbs'][] = $this->title;?>
+<div class="row">
+    <div class="col-md-7">
+        <h1><?= Html::encode($this->title) ?></h1>
+    </div>
+    <div class="col-md-5">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h6 class="panel-title">История импорта:</h6>
+            </div>
+            <div class="panel-body">
+                <p>08.10.2016 - Администратор</p>
+                <p>09.10.2016 - Администратор</p>
+                <p>10.10.2016 - Администратор</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h1><?= Html::encode($this->title) ?></h1>
 
 <?php 
 $form = ActiveForm::begin(
