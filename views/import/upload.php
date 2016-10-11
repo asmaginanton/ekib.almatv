@@ -3,9 +3,18 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use yii\models\ImportReport;
 use kartik\file\FileInput;
+use app\models;
 
 if($model->title){
     $this->title = $model->title;
+    
+    
+ // получение истории импорта   
+ $importHistores = models\ImportResult::find()->
+         where(['type' => $model->getShortClassName()])->
+         orderBy(['date' => SORT_DESC])->limit(3)->
+         all();
+ $counter = 1;
 }
 
 $this->params['breadcrumbs'][] = $this->title;?>
@@ -16,12 +25,19 @@ $this->params['breadcrumbs'][] = $this->title;?>
     <div class="col-md-5">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h6 class="panel-title">История импорта:</h6>
+                <h4 class="panel-title">История импорта:</h4>
             </div>
             <div class="panel-body">
-                <p>08.10.2016 - Администратор</p>
-                <p>09.10.2016 - Администратор</p>
-                <p>10.10.2016 - Администратор</p>
+                <table class=" table table-condensed" style="margin-bottom: 0px;">
+                    <?php foreach ($importHistores as $importHistory): ?>
+                    <tr>
+                        <td><?= $counter; $counter++ ?></td>
+                        <td><?= $importHistory->dateText ?></td>
+                        <td><?= $importHistory->executor?></td>
+                        <td><?= $importHistory->status?></td>
+                    </tr>
+                    <?php endforeach;?>
+                </table>
             </div>
         </div>
     </div>
@@ -106,12 +122,12 @@ $errors = $model->getErrors();
     </div>
     <?php    endif; ?>
 
+<?php endif; ?>
+
 <!--<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#dump">
   Dump Results
 </button>
 
 <div id="dump" class="collapse">
-    <?=        yii\helpers\VarDumper::dump($model->getResult(), 10, TRUE); ?>
+    <?=        yii\helpers\VarDumper::dump($importHistores, 10, TRUE); ?>
 </div>-->
-
-<?php endif; ?>

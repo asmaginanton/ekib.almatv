@@ -52,4 +52,9 @@ class ImportResult extends \yii\db\ActiveRecord
             'descr' => 'Descr',
         ];
     }
+    
+    public function getDateText(){
+        $date = strtotime($this->date);
+        return date('d.m.Y H:i', $date);
+    }
 }
