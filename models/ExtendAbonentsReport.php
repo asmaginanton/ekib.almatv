@@ -11,6 +11,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\web\UploadedFile;
 use app\models;
+use Tideways\XHProfRuns;
 
 
 /**
@@ -34,21 +35,27 @@ class ExtendAbonentsReport extends ImportReports{
     }
     
     public function upload(){
+        
         if($this->validate()){
             // сохранение
-            
+            $span_backup = MyProfiler::Start();
             // создаем бэкап таблиц
             $backup = new DatabaseBackup();
             $backup->Backup($this, 'abonent, home, address');
-
+            $span_backup->Stop("Backup");
+            
+            $span_proc = MyProfiler::Start();
             $this->processing();
-
+            $span_proc->Stop('Processing');
             // пишем результат в БД
             $this->writeResultToDb($this->getShortClassName());
-            return TRUE;
         } else {
             return FALSE;
         }
+        
+
+        
+        return TRUE;
     }
     
     private function processing()

@@ -40,11 +40,16 @@ class TestController extends web\Controller{
         return $this->render('upload',['model' => $model]);
     }
     
-    public function actionIndex(){
+    public function actionBackup(){
         
         $backup = new models\DatabaseBackup();
         $backup->Backup($this);
         
     }
     
+    public function actionPhpinfo(){
+        
+        phpinfo();
+        
+    }
 }
