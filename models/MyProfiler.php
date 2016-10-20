@@ -45,6 +45,30 @@ class MyProfiler {
     static public function getResult(){
         return self::getInstanse()->result;
     }
+    
+    static public function printResult(){
+      
+        $data = self::getResult();
+        
+        $res = "";
+        $res .= "<button type='button' class='btn btn-info' data-toggle='collapse' data-target='#profiler'>Profiler Results</button>";
+        $res .= "<div id='profiler' class='collapse'>";
+        foreach ($data as $groupKey => $group){
+            $res .= "<div>";
+            $res .= "<p>{$groupKey}</p>";
+            foreach ($group as $result){
+                $res .= "<div>";
+                
+                foreach ($result as $key => $value){
+                    $res .= "<p>{$key} - {$value}</p>";
+                }
+                $res .= "</div>";
+            }
+            $res .= "</div>";
+        }
+        $res .= "</div>";
+        return $res;
+    }
             
 }
 

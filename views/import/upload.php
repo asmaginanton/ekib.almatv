@@ -124,10 +124,12 @@ $errors = $model->getErrors();
 
 <?php endif; ?>
 
-<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#dump">
+<button type="button" class="btn btn-" data-toggle="collapse" data-target="#dump">
   Dump Results
 </button>
 
 <div id="dump" class="collapse">
-    <?=        yii\helpers\VarDumper::dump(models\MyProfiler::getResult(), 10, TRUE); ?>
+    <?=        yii\helpers\VarDumper::dump($model->dump, 10, TRUE); ?>
 </div>
+
+<?=models\MyProfiler::printResult()?>

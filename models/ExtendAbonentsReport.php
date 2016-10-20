@@ -24,8 +24,9 @@ class ExtendAbonentsReport extends ImportReports{
     public $title = "Импорт расширенного отчета по абонентам";
     
     public $csvFile;
-    public $arrayData;
     
+    public $dump = array();
+
     const ENCODING_REQUERE = true; // требуется ли перекодировка файла
     
     public function rules() {
@@ -37,13 +38,7 @@ class ExtendAbonentsReport extends ImportReports{
     public function upload(){
         
         if($this->validate()){
-            // сохранение
-            $span_backup = MyProfiler::Start();
-            // создаем бэкап таблиц
-            $backup = new DatabaseBackup();
-            $backup->Backup($this, 'abonent, home, address');
-            $span_backup->Stop("Backup");
-            
+
             $span_proc = MyProfiler::Start();
             $this->processing();
             $span_proc->Stop('Processing');
@@ -53,17 +48,34 @@ class ExtendAbonentsReport extends ImportReports{
             return FALSE;
         }
         
-
-        
         return TRUE;
     }
     
     private function processing()
     {
-        // загрузка данных
-        $this->arrayData = Utilites::csv_to_array($this->csvFile->tempName, self::ENCODING_REQUERE);
+        // создаем бэкап таблиц
+        $span_backup = MyProfiler::Start();
+        $backup = new DatabaseBackup();
+        $backup->Backup($this, 'abonent, home, address');
+        $span_backup->Stop("Backup");
+
+        // загрузка данных из файла в массив
+        $span_load = MyProfiler::Start();
+        $arrayData = Utilites::csv_to_array($this->csvFile->tempName, self::ENCODING_REQUERE);
+        $span_load->Stop('Load file to array');
         
-        foreach ($this->arrayData as $data){
+        // ищем дубли контрактов
+        $span_convert = MyProfiler::Start();
+        $counts = array_count_values(
+                    array_column($arrayData, 'V_EXT_IDENT')
+                );
+        $doubles = array_filter($counts, function ($v){
+                    return ($v > 1);
+                });
+        unset($counts);
+        $span_convert->Stop('Find doubles');
+                
+        foreach ($arrayData as $data){
             
             $record = new EARrecord($data);    
 
