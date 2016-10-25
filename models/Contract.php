@@ -61,4 +61,17 @@ class Contract extends \yii\db\ActiveRecord
     public function checkState($number, $category, $status, $balance, $type){
         return TRUE;
     }
+    
+    public static function getAll(){
+        
+        $contracts = Contract::find()
+                ->asArray()
+                ->select(['contract.*','abonent.fullname','street.name','home.number as num','home.korpus','address.apartment']) 
+                ->leftJoin('address', 'address.id = contract.address_id')
+                ->leftJoin('home', 'address.home_id = home.id')
+                ->leftJoin('street', 'home.street_id = street.id')
+                ->leftJoin('abonent', 'abonent.id = contract.abonent_id')
+                ->all();
+        return $contracts;
+    }
 }

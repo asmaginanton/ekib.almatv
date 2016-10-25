@@ -92,10 +92,8 @@ $errors = $model->getErrors();
             </h4>
         
             <div id="successes" class="collapse panel-body">
-                <?php foreach ($successes as $success): ?> 
-                        <?php foreach ($success as $key => $value): ?>
-                            <?= "<p>{$key} => {$value}</p>"; ?>
-                        <?php endforeach; ?>
+                <?php foreach ($successes as $key => $value): ?>
+                    <?= "<p>{$key} => {$value}</p>"; ?>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -112,10 +110,8 @@ $errors = $model->getErrors();
             </h4>
 
             <div id="warnings" class="collapse panel-body">
-                <?php foreach ($warnings as $warning): ?> 
-                        <?php foreach ($warning as $key => $value): ?>
-                            <?= "<p>{$key} => {$value}</p>"; ?>
-                        <?php endforeach; ?>
+                <?php foreach ($warnings as $key => $value): ?>
+                    <?= "<p>{$key} => {$value}</p>"; ?>
                 <?php endforeach; ?>
             </div>
         </div>

@@ -74,29 +74,46 @@ class ExtendAbonentsReport extends ImportReports{
                 });
         unset($counts);
         $span_convert->Stop('Find doubles');
-                
+
+        $span_getAllContracts = MyProfiler::Start();
+        $contracts = Contract::getAll();
+        $span_getAllContracts->Stop('get all contracts');
+        
+        $this->dump = $contracts;
+        
         foreach ($arrayData as $data){
+            
+            $span_foreach = MyProfiler::Start();
             
             $record = new EARrecord($data);    
 
-            $contract = Contract::find()->where(['number' => $record->contract_number])->one();
-
+            
+//            $contract = Contract::find()->where(['number' => $record->contract_number])->one();
+            
+            $contract = NULL;
             if($contract !== NULL){
                 $this->checkContractState($contract, $record);
             } else {
-                if ($this->addContract($record)){
-                    // если контракт добавлен успешно
-                    $this->addResult(self::IMPORT_SUCCESS, $record->contract_number, 'Добавлен в базу');
-                } else {
-                    // если контракт не добавлен
-                    $this->addResult(self::IMPORT_ERROR, $record->contract_number, 'Контракт не добавлен в базу');
-                }
+                
+//                $span_addContract = MyProfiler::Start();
+//                if ($this->addContract($record)){
+//                    // если контракт добавлен успешно
+//                    $this->addResult(self::IMPORT_SUCCESS, $record->contract_number, 'Добавлен в базу');
+//                } else {
+//                    // если контракт не добавлен
+//                    $this->addResult(self::IMPORT_ERROR, $record->contract_number, 'Контракт не добавлен в базу');
+//                }
+//                $span_addContract->Stop('AddContract');
             }
             $this->addCounter();
+            
+            $span_foreach->Stop('Foreach array data');
         }
     }
     
     private function addContract(EARrecord $record){
+        
+
         
         $contract = new Contract();
         // Информация о состоянии контракта

@@ -42,17 +42,20 @@ class ImportReports extends Model{
             throw new Exception('Не верный тип события');
         }
         
-        if($type == self::IMPORT_SUCCESS){
-            $this->importResult[self::IMPORT_SUCCESS][] = [$key => $message];}
-        if($type == self::IMPORT_ERROR){
-            $this->importResult[self::IMPORT_ERROR][] = [$key => $message];}
-        if($type == self::IMPORT_FATAL_ERROR){
-            $this->importResult[self::IMPORT_FATAL_ERROR][] = [$key => $message];}
+        if(!array_key_exists($key, $this->importResult[$type])) {
+            $this->importResult[$type][$key] = $message;
+        } else {
+            $this->importResult[$type][$key] .= ", " . $message;
+        }
     }
     
     public function addResults($type, $key,array $messages){
         foreach ($messages as $message){
-            $this->addResult($type, $key, $message);
+            if(is_array($message)){
+                $this->addResults($type, $key, $message);
+            } else {
+                $this->addResult($type, $key, $message);
+            }
         }
     }
     
