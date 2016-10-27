@@ -17,6 +17,8 @@ class Utilites {
     
     static function csv_to_array($filename='', $encoding = true, $delimiter=';')
     {
+        $span_load = MyProfiler::Start();
+        
         if(!file_exists($filename) || !is_readable($filename))
             return FALSE;
 
@@ -34,6 +36,8 @@ class Utilites {
             }
             fclose($handle);
         }
+        
+        $span_load->Stop('Load file to array');
         return $data;
     }
     

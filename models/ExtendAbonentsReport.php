@@ -11,8 +11,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\web\UploadedFile;
 use app\models;
-use Tideways\XHProfRuns;
-
+use yii\helpers;
 
 /**
  * Description of ExtendAbonentsReport
@@ -51,35 +50,38 @@ class ExtendAbonentsReport extends ImportReports{
         return TRUE;
     }
     
-    private function processing()
-    {
-        // создаем бэкап таблиц
-        $span_backup = MyProfiler::Start();
-        $backup = new DatabaseBackup();
-        $backup->Backup($this, 'abonent, home, address');
-        $span_backup->Stop("Backup");
-
-        // загрузка данных из файла в массив
-        $span_load = MyProfiler::Start();
-        $arrayData = Utilites::csv_to_array($this->csvFile->tempName, self::ENCODING_REQUERE);
-        $span_load->Stop('Load file to array');
-        
-        // ищем дубли контрактов
+    private function getDoubles($array){
         $span_convert = MyProfiler::Start();
+        
         $counts = array_count_values(
-                    array_column($arrayData, 'V_EXT_IDENT')
+                    array_column($array, 'V_EXT_IDENT')
                 );
-        $doubles = array_filter($counts, function ($v){
+        $result = array_filter($counts, function ($v){
                     return ($v > 1);
                 });
         unset($counts);
-        $span_convert->Stop('Find doubles');
-
-        $span_getAllContracts = MyProfiler::Start();
-        $contracts = Contract::getAll();
-        $span_getAllContracts->Stop('get all contracts');
         
-        $this->dump = $contracts;
+        $span_convert->Stop('Find doubles');
+        return $result;
+    }
+
+    private function processing()
+    {
+        // создаем бэкап таблиц
+        DatabaseBackup::Backup($this, 'abonent, home, address');
+
+        // загрузка данных из файла в массив
+        $arrayData = Utilites::csv_to_array($this->csvFile->tempName, self::ENCODING_REQUERE);
+        
+        // ищем дубли контрактов
+        $doubles = $this->getDoubles($arrayData);
+
+        // Получаем все контракты с адресами и ФИО абонентов из базы
+        $contracts = Contract::getAll();
+        
+        $this->dump['arrayData'] = current($arrayData);
+        $this->dump['doubles'] = $doubles;
+        $this->dump['contracts'] = current($contracts);
         
         foreach ($arrayData as $data){
             
@@ -87,24 +89,20 @@ class ExtendAbonentsReport extends ImportReports{
             
             $record = new EARrecord($data);    
 
+            //Проверим не является ли запись дублем
+            if(array_key_exists($record->contract_number, $doubles)){
+                //Если дубль
+                // Обработка !!!!!!!
+            }
             
-//            $contract = Contract::find()->where(['number' => $record->contract_number])->one();
+            $contract = helpers\ArrayHelper::remove($contracts, $record->contract_number);
             
-            $contract = NULL;
             if($contract !== NULL){
                 $this->checkContractState($contract, $record);
             } else {
-                
-//                $span_addContract = MyProfiler::Start();
-//                if ($this->addContract($record)){
-//                    // если контракт добавлен успешно
-//                    $this->addResult(self::IMPORT_SUCCESS, $record->contract_number, 'Добавлен в базу');
-//                } else {
-//                    // если контракт не добавлен
-//                    $this->addResult(self::IMPORT_ERROR, $record->contract_number, 'Контракт не добавлен в базу');
-//                }
-//                $span_addContract->Stop('AddContract');
+                $this->addContract($record);
             }
+            
             $this->addCounter();
             
             $span_foreach->Stop('Foreach array data');
@@ -113,7 +111,7 @@ class ExtendAbonentsReport extends ImportReports{
     
     private function addContract(EARrecord $record){
         
-
+        $span_addContract = MyProfiler::Start();
         
         $contract = new Contract();
         // Информация о состоянии контракта
@@ -126,22 +124,21 @@ class ExtendAbonentsReport extends ImportReports{
         // получаем id дома
         $home_id = Home::getIdByFullname($record->address_home);
         if(!$home_id){
-            $this->addResult(self::IMPORT_ERROR, $contract->number, 'Невозможно получить ID дома '.$record->address_home);
-            return FALSE;
-        }
-        // получаем id адреса
-        $address = Address::find()->where(['home_id' => $home_id, 'apartment' => $record->address_apartment])->one();
-        if(!$address){
-            $address = new Address();
-            $address->home_id = $home_id;
-            $address->apartment = $record->address_apartment;
-            if($address->validate()) {
-                $address->save();
-                Comment::WriteComment('address', $address->id, 'Добавлен в базу');
+            $this->addResult(self::IMPORT_ERROR, $contract->number, 'Нет ID дома '.$record->address_home);
+        } else {
+            // получаем id адреса
+            $address = Address::find()->where(['home_id' => $home_id, 'apartment' => $record->address_apartment])->one();
+            if(!$address){
+                $address = new Address();
+                $address->home_id = $home_id;
+                $address->apartment = $record->address_apartment;
+                if($address->validate()) {
+                    $address->save();
+                    Comment::WriteComment('address', $address->id, 'Добавлен в базу');
+                }
             }
+            $contract->address_id = $address->id;
         }
-        
-        $contract->address_id = $address->id;
         
         // получаем id абонента
         $abonent = Abonent::find()->where(['fullname' => $record->abonent_fullname])->one();
@@ -165,14 +162,18 @@ class ExtendAbonentsReport extends ImportReports{
         if($contract->validate()){
             $contract->save();
             Comment::WriteComment('contract', $contract->id, 'Добавлен в базу');
-            return TRUE;
-        } else {
+            $this->addResult(self::IMPORT_SUCCESS, $record->contract_number, 'Добавлен в базу');
+            } else {
             $this->addResults(self::IMPORT_ERROR, $contract->number, $contract->getErrors());
+            $this->addResult(self::IMPORT_ERROR, $record->contract_number, 'Контракт не добавлен в базу');
         }
+        $span_addContract->Stop('AddContract');
     }
     
-    private function checkContractState(Contract $contract, EARrecord $record){
+    private function checkContractState($contract, EARrecord $record){
+        $span_checkContract = MyProfiler::Start();
         
+        $span_checkContract->Stop('CheckContract');
     }
     
 }

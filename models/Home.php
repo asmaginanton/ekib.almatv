@@ -21,7 +21,9 @@ use yii\helpers;
  */
 class Home extends \yii\db\ActiveRecord
 {
-    /**
+    private static $_base;
+
+        /**
      * @inheritdoc
      */
     public static function tableName()
@@ -96,27 +98,67 @@ class Home extends \yii\db\ActiveRecord
         return $fullname;
     }
     
-    public static function getIdByFullname($fullname)
-    {
-        $pattern = '/^(?<street>\D+\s?\D+)\s(?<home>\d*)[\/]?(?<korpus>\w?)/';
-        $home_id = NULL;
+//    public static function getIdByFullname($fullname)
+//    {
+//        $pattern = '/^(?<street>\D+\s?\D+)\s(?<home>\d*)[\/]?(?<korpus>\w?)/';
+//        $home_id = NULL;
+//        
+//        if(preg_match($pattern, $fullname, $matches))
+//        {
+//            $street = $matches['street'];
+//            $number = $matches['home'];
+//            $korpus = $matches['korpus'];
+//            
+//            $street_id = Street::find()->where(['name' => $street])->one()->id;
+//            $home = Home::find()->where(['street_id' => $street_id, 'number' => $number, 'korpus' => $korpus])->one();
+//            if($home) {
+//                $home_id=$home->id;
+//            }
+//        }
+//        return $home_id;
+//    }
+    
+    public static function getIdByFullname($fullname){
         
-        if(preg_match($pattern, $fullname, $matches))
-        {
-            $street = $matches['street'];
-            $number = $matches['home'];
-            $korpus = $matches['korpus'];
-            
-            $street_id = Street::find()->where(['name' => $street])->one()->id;
-            $home = Home::find()->where(['street_id' => $street_id, 'number' => $number, 'korpus' => $korpus])->one();
-            if($home) {
-                $home_id=$home->id;
-            }
+        if(is_null(self::$_base)){
+            self::fillBase();
         }
-        return $home_id;
+        
+        if(array_key_exists($fullname, self::$_base)){
+            return self::$_base[$fullname];
+        } else {
+            return NULL;
+        }
+    }
+    
+    private static function fillBase(){
+        
+        $base = array();
+        $tmp = Home::find()
+                ->asArray()
+                ->select('home.id, street.name, home.number, home.korpus')
+                ->leftJoin('street', 'street.id=street_id')
+                ->all();
+        
+        foreach ($tmp as $record){
+            $id = $record['id'];
+            $street = $record['name'];
+            $num = $record['number'];
+            $korp = $record['korpus'];
+            
+            $fullname = $street . " " . $num;
+            if(!is_null($korp)){
+                (!is_numeric($korp)) ?: $fullname .= "/";
+                $fullname .= $korp;
+            }    
+            
+            $base[$fullname] = $id;
+        }
+        
+        self::$_base = $base;
     }
 
-        public function getCountFloors()
+    public function getCountFloors()
     {
         if($this->number_of_storeys && $this->number_of_entrances) {
             return $this->number_of_storeys * $this->number_of_entrances;}

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use \yii\helpers;
 
 /**
  * This is the model class for table "contract".
@@ -64,6 +65,8 @@ class Contract extends \yii\db\ActiveRecord
     
     public static function getAll(){
         
+        $span_getAllContracts = MyProfiler::Start();
+        
         $contracts = Contract::find()
                 ->asArray()
                 ->select(['contract.*','abonent.fullname','street.name','home.number as num','home.korpus','address.apartment']) 
@@ -72,6 +75,11 @@ class Contract extends \yii\db\ActiveRecord
                 ->leftJoin('street', 'home.street_id = street.id')
                 ->leftJoin('abonent', 'abonent.id = contract.abonent_id')
                 ->all();
-        return $contracts;
+        
+        $result = helpers\ArrayHelper::index($contracts, 'number');
+        
+        $span_getAllContracts->Stop('get all contracts');
+        
+        return $result;
     }
 }

@@ -18,18 +18,31 @@ use yii\base;
  */
 class DatabaseBackup {
     
-    
     private $file;
     private $file_name;
     private $backup_path;
+    static private $_instance;
+    
+    private function __construct() {
 
+    }
+    
+    private static function getInstanse(){
+        
+        if(is_null(self::$_instance)){
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
 
-    public function Backup($sender, $tables = NULL){
+    public static function Backup($sender, $tables = NULL){
         
+        $span_backup = MyProfiler::Start();
         
-                
+        $instanse = self::getInstanse();
+        
         if($tables === NULL){
-            $tables = $this->getTables();
+            $tables = $instanse->getTables();
         } else {
             (is_array($tables)) ? : ($tables = split(",", $tables));
         }
@@ -37,22 +50,24 @@ class DatabaseBackup {
         if(!is_array($tables)){
             throw new Exception ("Wrong input data");}
         
-        if (!$this->fileOpen($sender)){
-            throw new base\ErrorException("Error open file " . $this->file_name);
+        if (!$instanse->fileOpen($sender)){
+            throw new base\ErrorException("Error open file " . $instanse->file_name);
         }
             
-        if (! $this->StartBackup ()) {
+        if (! $instanse->StartBackup ()) {
             throw new Exception("Error start backup");
         }
 
         foreach ( $tables as $tableName ) {
-                $this->getColumns ( $tableName );
+                $instanse->getColumns ( $tableName );
         }
         foreach ( $tables as $tableName ) {
-                $this->getData ( $tableName );
+                $instanse->getData ( $tableName );
         }
 
-        $this->EndBackup ();    
+        $instanse->EndBackup (); 
+        
+        $span_backup->Stop("Backup");
     }
     
     private function fileOpen($sender){

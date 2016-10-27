@@ -58,29 +58,34 @@ class MyProfiler {
 
         $res .= "<table class='table table-bordered'>";
         $res .= "<tr>";
-        $res .= "<th>Name</th><th>Count</th><th>Time</th><th>Memory</th>";
+        $res .= "<th style='text-align:center'>Name</th>".
+                "<th style='text-align:center'>Count</th>".
+                "<th style='text-align:center'>Time</th>".
+                "<th style='text-align:center'>Memory</th>";
         $res .= "</tr>";
 
         foreach ($data as $groupKey => $group){
-            $res .= "<tr>";
-            $res .= "<td>{$groupKey}</td>";
+//            $res .= "<tr>";
+//            $res .= "<td>{$groupKey}</td>";
+//            $res .= "</tr>";
             
             $total_time = 0;
             $total_mem = 0;
             
             foreach ($group as $result){
-                $res .= "<tr>";
-                $res .= "<td></td><td></td>";
-                    $res .= "<td>{$result['time']}</td>";
-                    $total_time += $result['time'];
-                    $res .= "<td>{$result['memory']}</td>";
-                    $total_mem += $result['memory'];
-                $res .= "</tr>";
+                $total_time += $result['time'];
+                $total_mem += $result['memory'];
+                
+//                $res .= "<tr>";
+//                $res .= "<td></td><td></td>";
+//                $res .= "<td>{$result['time']}</td>";
+//                $res .= "<td>{$result['memory']}</td>";
+//                $res .= "</tr>";
             }
             
-            $res .= "<tr><td>Total:</td><td>" . count($group) . "</td><td>{$total_time}</td><td>{$total_mem}</td></tr>";
-            
-            $res .= "</tr>";
+            $res .= "<tr><td>{$groupKey} (total):</td><td>" . count($group) . 
+                    "</td><td>{$total_time}</td>".
+                    "<td style='text-align:right'>" . number_format($total_mem, 0, ',', ' ') . "</td></tr>";
         }
         
         $res .= "</table>";
