@@ -93,6 +93,7 @@ class ExtendAbonentsReport extends ImportReports{
             if(array_key_exists($record->contract_number, $doubles)){
                 //Если дубль
                 // Обработка !!!!!!!
+                continue;
             }
             
             $contract = helpers\ArrayHelper::remove($contracts, $record->contract_number);
@@ -107,6 +108,8 @@ class ExtendAbonentsReport extends ImportReports{
             
             $span_foreach->Stop('Foreach array data');
         }
+        
+        Address::fetchData();
     }
     
     private function addContract(EARrecord $record){
@@ -127,17 +130,18 @@ class ExtendAbonentsReport extends ImportReports{
             $this->addResult(self::IMPORT_ERROR, $contract->number, 'Нет ID дома '.$record->address_home);
         } else {
             // получаем id адреса
-            $address = Address::find()->where(['home_id' => $home_id, 'apartment' => $record->address_apartment])->one();
-            if(!$address){
-                $address = new Address();
-                $address->home_id = $home_id;
-                $address->apartment = $record->address_apartment;
-                if($address->validate()) {
-                    $address->save();
-                    Comment::WriteComment('address', $address->id, 'Добавлен в базу');
-                }
-            }
-            $contract->address_id = $address->id;
+//            $address = Address::find()->where(['home_id' => $home_id, 'apartment' => $record->address_apartment])->one();
+//            if(!$address){
+//                $address = new Address();
+//                $address->home_id = $home_id;
+//                $address->apartment = $record->address_apartment;
+//                if($address->validate()) {
+//                    $address->save();
+//                    Comment::WriteComment('address', $address->id, 'Добавлен в базу');
+//                }
+//            }
+//            $contract->address_id = $address->id;
+            $contract->address_id = Address::getId($home_id, $record->address_apartment);
         }
         
         // получаем id абонента
@@ -163,7 +167,7 @@ class ExtendAbonentsReport extends ImportReports{
             $contract->save();
             Comment::WriteComment('contract', $contract->id, 'Добавлен в базу');
             $this->addResult(self::IMPORT_SUCCESS, $record->contract_number, 'Добавлен в базу');
-            } else {
+        } else {
             $this->addResults(self::IMPORT_ERROR, $contract->number, $contract->getErrors());
             $this->addResult(self::IMPORT_ERROR, $record->contract_number, 'Контракт не добавлен в базу');
         }

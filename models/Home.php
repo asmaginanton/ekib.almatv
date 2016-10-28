@@ -39,7 +39,7 @@ class Home extends \yii\db\ActiveRecord
         return [
             [['street_id', 'number', 'agent_id', 'district_id', 'apartments'], 'required'],
             [['street_id', 'number', 'agent_id', 'district_id', 'apartments', 'number_of_storeys', 'number_of_entrances'], 'integer'],
-            [['korpus'], 'string', 'max' => 2],
+            [['korpus'], 'string', 'max' => 5],
             [['apartments_pattern'], 'string', 'max' => 255],
         ];
     }
