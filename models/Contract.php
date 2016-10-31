@@ -19,7 +19,9 @@ use \yii\helpers;
  */
 class Contract extends \yii\db\ActiveRecord
 {
-    /**
+    private static $_casheInsert;
+
+        /**
      * @inheritdoc
      */
     public static function tableName()
@@ -81,5 +83,12 @@ class Contract extends \yii\db\ActiveRecord
         $span_getAllContracts->Stop('get all contracts');
         
         return $result;
+    }
+    
+    public static function fetchInsertCashe()
+    {
+        \Yii::$app->db->createCommand()
+                ->batchInsert('abonent', ['id', 'fullname', 'mobile', 'phone'], self::$_data)
+                ->execute();
     }
 }

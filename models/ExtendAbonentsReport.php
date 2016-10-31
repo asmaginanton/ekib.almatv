@@ -110,6 +110,7 @@ class ExtendAbonentsReport extends ImportReports{
         }
         
         Address::fetchData();
+        Abonent::fetchData();
     }
     
     private function addContract(EARrecord $record){
@@ -130,37 +131,11 @@ class ExtendAbonentsReport extends ImportReports{
             $this->addResult(self::IMPORT_ERROR, $contract->number, 'Нет ID дома '.$record->address_home);
         } else {
             // получаем id адреса
-//            $address = Address::find()->where(['home_id' => $home_id, 'apartment' => $record->address_apartment])->one();
-//            if(!$address){
-//                $address = new Address();
-//                $address->home_id = $home_id;
-//                $address->apartment = $record->address_apartment;
-//                if($address->validate()) {
-//                    $address->save();
-//                    Comment::WriteComment('address', $address->id, 'Добавлен в базу');
-//                }
-//            }
-//            $contract->address_id = $address->id;
             $contract->address_id = Address::getId($home_id, $record->address_apartment);
         }
         
         // получаем id абонента
-        $abonent = Abonent::find()->where(['fullname' => $record->abonent_fullname])->one();
-        if(!$abonent){
-            $abonent = new Abonent();
-            $abonent->fullname = $record->abonent_fullname;
-            $abonent->mobile = $record->abonent_mobile;
-            $abonent->phone = $record->abonent_phone;
-            if($abonent->validate()) {
-                $abonent->save();
-                Comment::WriteComment('abonent', $abonent->id, 'Добавлен в базу');
-            } else {
-                $this->addResults(self::IMPORT_ERROR, $contract->number, $abonent->getErrors());
-            }
-        }
-        
-        $contract->abonent_id = $abonent->id;
-        
+        $contract->abonent_id = Abonent::getId($record->abonent_fullname, $record->abonent_mobile, $record->abonent_phone);
         
         // Сохранение
         if($contract->validate()){
